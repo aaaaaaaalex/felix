@@ -42,10 +42,14 @@ while true; do
     done
   fi
 
-  echo "calico-felix-wrapper: Starting calico-felix"
-  calico-felix &
+  echo "calico-felix-wrapper: Starting calico-felix in a headless debug server, port 9999"
+  /usr/bin/dlv --accept-multiclient --headless --listen 0.0.0.0:9999 exec $(which calico-felix) &
+  sleep 3
+  # auto-connect a debug client that will ensure felix execution continues straight away
+  /usr/bin/dlv connect 0.0.0.0:9999 --init=/etc/dlv/init.rc
   pid=$!
   echo "calico-felix-wrapper: Started calico-felix, PID=$pid"
+
   wait $pid
   rc=$?
   echo "calico-felix-wrapper: Process stopped, RC=$rc"
