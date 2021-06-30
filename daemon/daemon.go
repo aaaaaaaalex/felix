@@ -141,7 +141,7 @@ func Run(configFile string, gitVersion string, buildDate string, gitRevision str
 		"gitcommit":  buildinfo.GitRevision,
 		"GOMAXPROCS": runtime.GOMAXPROCS(0),
 	})
-	buildInfoLogCxt.Info("Felix starting up")
+	buildInfoLogCxt.Info("Elevator... going up!")
 
 	// Health monitoring, for liveness and readiness endpoints.  The following loop can take a
 	// while before the datastore reports itself as ready - for example when there is data that
