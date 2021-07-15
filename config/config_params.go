@@ -468,10 +468,14 @@ func (config *Config) KubernetesProvider() Provider {
 }
 
 // ShouldEncryptWireguardHostTraffic factors in the kubernetes provider and config params to decide if host-traffic encryption should happen
-func (config *Config) ShouldEncryptWireguardHostTraffic() bool{
+func (config *Config) ShouldEncryptWireguardHostTraffic() bool {
 	// currently, AKS *must* encrypt hostnetwork traffic, while it is optional on EKS
-	return config.KubernetesProvider() == ProviderAKS ||
+	b := config.KubernetesProvider() == ProviderAKS ||
 		(config.WireguardHostEncryptionEnabled && config.KubernetesProvider() == ProviderEKS)
+
+	log.Warnf("\n\nShould encrypt host traffic on provider %s? %t", config.KubernetesProvider().String(), b)
+	log.Warnf("routesource: %s", config.RouteSource)
+	return b
 }
 
 func (config *Config) resolve() (changed bool, err error) {
