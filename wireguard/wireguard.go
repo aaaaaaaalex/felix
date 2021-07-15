@@ -166,6 +166,7 @@ func New(
 	statusCallback func(publicKey wgtypes.Key) error,
 	opRecorder logutils.OpRecorder,
 ) *Wireguard {
+	log.Warnf("\n\nWireGuard config on-startup, EncryptHostTraffic: %t.\n\n", config.EncryptHostTraffic)
 	return NewWithShims(
 		hostname,
 		config,
