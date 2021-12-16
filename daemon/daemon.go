@@ -409,6 +409,8 @@ configRetry:
 		v3Client,
 		dpDriver,
 		failureReportChan)
+	// Start communicating with the dataplane driver.
+	dpConnector.Start()
 
 	// If enabled, create a server for the policy sync API.  This allows clients to connect to
 	// Felix over a socket and receive policy updates.
@@ -603,9 +605,6 @@ configRetry:
 		)
 		dpConnector.statusReporter.Start()
 	}
-
-	// Start communicating with the dataplane driver.
-	dpConnector.Start()
 
 	if policySyncProcessor != nil {
 		log.WithField("policySyncPathPrefix", configParams.PolicySyncPathPrefix).Info(
@@ -1012,6 +1011,7 @@ func (fc *DataplaneConnector) handleProcessStatusUpdate(ctx context.Context, msg
 }
 
 func (fc *DataplaneConnector) reconcileWireguardStatUpdate(dpPubKey string) error {
+	log.Debugf("reporting wireguard public key %s", dpPubKey)
 	// In case of a recoverable failure (ErrorResourceUpdateConflict), retry update 3 times.
 	for iter := 0; iter < 3; iter++ {
 		// Read node resource from datastore and compare it with the publicKey from dataplane.
